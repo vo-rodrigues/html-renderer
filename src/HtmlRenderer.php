@@ -87,7 +87,9 @@ class HtmlRenderer
     }
     public function render(): string
     {
-        $this->addTemplateData(require $this->templatePath.'template.'.$this->language.'.php');
+        if (isset($this->language)) {
+            $this->template->data(require $this->templatePath."template.{$this->language}.php");
+        }
         $this->retrieveContentData();
         $head__data=$this->headData+$this->templateData+$this->commonData;
         $header__data=$this->headerData+$this->templateData+$this->commonData;
@@ -110,7 +112,9 @@ class HtmlRenderer
     }
     protected function retrieveContentData(): void
     {
-        $this->addCommonData($this->retrieveFileData($this->contentFolder.'locale.'.$this->language.'.php'));
+        if (isset($this->language)) {
+            $this->template->data(require $this->templatePath."template.{$this->language}.php");
+        }
         $this->addHeadData($this->retrieveFileData($this->contentFolder.'data.head.php'));
     }
     protected function retrieveFileData(string $filePath): array

@@ -10,6 +10,7 @@ use League\Plates\Template\Template;
 class HtmlRenderer
 {
     private Template $template;
+    private Engine $engine;
     private string $language;
     private string $templatePath;
     private string $viewsPath;
@@ -27,10 +28,10 @@ class HtmlRenderer
 
     function __construct(string $templatePath, string $viewsPath, string $templateFile='template')
     {
-        $engine = new Engine($templatePath);
-        $engine->addFolder('views', $viewsPath);
+        $this->engine = new Engine($templatePath);
+        $this->engine->addFolder('views', $viewsPath);
         $this->viewsPath = $viewsPath;
-        $this->template = $engine->make($templateFile);
+        $this->template = $this->engine->make($templateFile);
         $this->templatePath = $templatePath;
         $this->setBody('body');
         $this->setHeader('header');
@@ -84,6 +85,10 @@ class HtmlRenderer
     public function addContentData(array $data):void
     {
         $this->contentData =  array_merge($this->contentData, $data);
+    }
+    public function addFolder(string $name, string $folderPath): void
+    {
+        $this->engine->addFolder($name, $folderPath);
     }
     public function render(): string
     {
